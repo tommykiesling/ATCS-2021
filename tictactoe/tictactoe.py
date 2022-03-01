@@ -7,10 +7,9 @@ class TicTacToe:
         row, col = (3, 3)
         self.board = [['-' for i in range(row)] for j in range(col)]
 
-
     def print_instructions(self):
         # TODO: Print the instructions to the game
-        print("Place X's and O's until a tie or someone gets three in a row" )
+        print("Place X's and O's until a tie or someone gets three in a row")
         return
 
     def print_board(self):
@@ -45,7 +44,13 @@ class TicTacToe:
 
     def take_turn(self, player):
         # TODO: Simply call the take_manual_turn function
-        self.take_random_turn(player)
+        if player == 'X':
+            self.take_manual_turn(player)
+        else:
+            (temp, rowcord, colcord) = self.minimax(player, 2, -1000, 1000)
+            self.place_player(player, rowcord, colcord)
+
+
         return
 
     def check_col_win(self, player):
@@ -81,13 +86,13 @@ class TicTacToe:
     def check_win(self, player):
         # TODO: Check win
         if self.check_row_win(player) is True:
-            print("row win")
+
             return True
         if self.check_col_win(player) is True:
-            print("col win")
+
             return True
         if self.check_diag_win(player) is True:
-            print("diag win")
+
             return True
         return False
 
@@ -99,6 +104,15 @@ class TicTacToe:
                     return False
 
         return True
+
+    def num_open_spaces(self):
+        num = 0
+        for row in self.board:
+            for x in row:
+                if x == '-':
+                    num += 1
+        return num
+
 
     def play_game(self):
         # TODO: Play game
@@ -128,6 +142,70 @@ class TicTacToe:
           if self.is_valid_move(row, col) is True:
               self.place_player(player, row, col)
               return
+
+    def minimax(self, player, depth, alpha, beta):
+        rrow = None
+        rcol = None
+        if self.check_win('O') is True:
+            return (10, 0, 0)
+        if self.check_win('X') is True:
+            return -10, 0, 0
+        if self.check_tie() is True:
+            return (0, 0, 0)
+        if depth == 0:
+            return (0, 0, 0)
+        if player == 'O':
+            best = -1100
+            for row in range(0, 3):
+                for col in range(0, 3):
+                    if self.board[row][col] == '-':
+                        self.place_player(player, row, col)
+                        (temp, minrow, mincol) = self.minimax('X', depth - 1, alpha, beta)
+                        self.place_player('-', row, col)
+                        if temp > best:
+                            best = temp
+                            rrow = row
+                            rcol = col
+
+                        if temp >= beta:
+                            return best, rrow, rcol
+
+                        if temp > alpha:
+                            alpha = temp
+
+
+            return best, rrow, rcol
+        else:
+            worst = 1100
+            for row in range(0, 3):
+                for col in range(0, 3):
+                    if self.board[row][col] == '-':
+
+                        self.place_player(player, row, col)
+
+                        (temp, maxrow, maxcol) = self.minimax('O', depth, alpha, beta)
+                        self.place_player('-', row, col)
+
+                        if temp < worst:
+                            worst = temp
+                            rrow = row
+                            rcol = col
+
+                        if worst <= alpha:
+                            return worst, rrow, rcol
+                        if worst < beta:
+                            beta = temp
+
+            return (worst, rrow, rcol)
+
+
+
+
+
+                
+
+
+
 
 
 
