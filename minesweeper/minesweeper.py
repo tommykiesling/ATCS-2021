@@ -7,10 +7,13 @@ class MineSweeper:
         self.board = [[Square() for i in range(row)] for j in range(col)]
         self.flags = 100
 
-    def place_flags(self):
+    def place_flags(self, x, y):
+        flags_left = self.flags
+        for i in range(self.flags):
+            index = random.randint(0, )
 
 
-    def assign_nums(self):
+    def assign_nums(self, ):
 
 
     def is_valid_move(self, x, y):
@@ -33,5 +36,6 @@ class MineSweeper:
 
     def play_game(self):
 
-
+    def num_open(self):
+        for(i   )
 
