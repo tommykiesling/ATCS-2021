@@ -6,6 +6,7 @@ class Square:
         self.value = 0
         self.revealed = False
         self.flagged = False
+        self.first_square = False
 
     def set_value(self, val):
         self.value = val
@@ -18,5 +19,9 @@ class Square:
 
     def reveal(self):
         self.revealed = True
+
+    def set_first_square(self):
+        self.first_square = True
+
 
 
