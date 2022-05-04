@@ -23,5 +23,16 @@ class Square:
     def set_first_square(self):
         self.first_square = True
 
+    def increment(self):
+        self.value += 1
+
+    def __repr__(self):
+        if self.flagged:
+            return "F"
+        ##if not self.revealed:
+            ##return "-"
+        else:
+            return str(self.value)
+
 
 
