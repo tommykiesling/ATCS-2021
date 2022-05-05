@@ -58,38 +58,47 @@ class MineSweeper:
             return False
 
     def clear_blanks(self, x, y):
+        self.board[x][y].reveal()
         if x > 0:
-            if self.board[x - 1][y].value == 0 and not self.board[x - 1][y].revealed:
+            if not self.board[x - 1][y].revealed:
                 self.board[x - 1][y].reveal()
-                self.clear_blanks(x - 1, y)
+                if self.board[x - 1][y].value == 0:
+                    self.clear_blanks(x - 1, y)
         if x < 21:
-            if self.board[x + 1][y].value == 0 and not self.board[x + 1][y].revealed:
-                self.board[x - 1][y].reveal()
-                self.clear_blanks(x + 1, y)
+            if not self.board[x + 1][y].revealed:
+                self.board[x + 1][y].reveal()
+                if self.board[x + 1][y].value == 0:
+                    self.clear_blanks(x + 1, y)
         if y > 0:
-            if self.board[x][y - 1].value == 0 and not self.board[x][y - 1].revealed:
-                self.board[x - 1][y].reveal()
-                self.clear_blanks(x, y - 1)
+            if not self.board[x][y - 1].revealed:
+                self.board[x][y - 1].reveal()
+                if self.board[x][y - 1].value == 0:
+                    self.clear_blanks(x, y - 1)
         if y < 21:
-            if self.board[x][y + 1].value == 0 and not self.board[x][y + 1].revealed:
-                self.board[x - 1][y].reveal()
-                self.clear_blanks(x, y + 1)
+            if not self.board[x][y + 1].revealed:
+                self.board[x][y + 1].reveal()
+                if self.board[x][y + 1].value == 0:
+                    self.clear_blanks(x, y + 1)
         if x > 0 and y > 0:
-            if self.board[x - 1][y - 1].value == 0 and not self.board[x - 1][y - 1].revealed:
-                self.board[x - 1][y].reveal()
-                self.clear_blanks(x - 1, y - 1)
+            if not self.board[x - 1][y - 1].revealed:
+                self.board[x - 1][y - 1].reveal()
+                if self.board[x - 1][y - 1].value == 0:
+                    self.clear_blanks(x - 1, y - 1)
         if x < 21 and y < 21:
-            if self.board[x + 1][y + 1].value == 0 and not self.board[x + 1][y + 1].revealed:
-                self.board[x - 1][y].reveal()
-                self.clear_blanks(x + 1, y + 1)
+            if not self.board[x + 1][y + 1].revealed:
+                self.board[x + 1][y + 1].reveal()
+                if self.board[x + 1][y + 1].value == 0:
+                    self.clear_blanks(x + 1, y + 1)
         if x < 21 and y > 0:
-            if self.board[x + 1][y - 1].value == 0 and not self.board[x + 1][y - 1].revealed:
-                self.board[x - 1][y].reveal()
-                self.clear_blanks(x + 1, y - 1)
+            if not self.board[x + 1][y - 1].revealed:
+                self.board[x + 1][y - 1].reveal()
+                if self.board[x + 1][y - 1].value == 0:
+                    self.clear_blanks(x + 1, y - 1)
         if x > 0 and y < 21:
-            if self.board[x - 1][y + 1].value == 0 and not self.board[x - 1][y + 1].revealed:
-                self.board[x - 1][y].reveal()
-                self.clear_blanks(x - 1, y + 1)
+            if not self.board[x - 1][y + 1].revealed:
+                self.board[x - 1][y + 1].reveal()
+                if self.board[x - 1][y + 1].value == 0:
+                    self.clear_blanks(x - 1, y + 1)
 
 
 
@@ -110,8 +119,7 @@ class MineSweeper:
         self.board[cord[0]][cord[1]].reveal()
         self.place_mines(cord[0], cord[1])
         self.assign_nums()
-
-
+        self.clear_blanks(cord[0], cord[1])
 
 
 
@@ -139,7 +147,6 @@ class MineSweeper:
             for j in range(len(self.board[0])):
                 if self.board[i][j].value == 0 and self.board[i][j].revealed is False:
                     num += 1
-
         return num
 
 
