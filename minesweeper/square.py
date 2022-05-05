@@ -29,10 +29,10 @@ class Square:
     def __repr__(self):
         if self.flagged:
             return "F"
-        if self.value == -1:
-            return "M"
         if not self.revealed:
             return "-"
+        if self.value == -1:
+            return "M"
         else:
             return str(self.value)
 

@@ -3,10 +3,10 @@ from square import *
 
 class MineSweeper:
     def __init__(self):
-        row, col = (22, 22)
-        self.board = [[Square() for i in range(row)] for j in range(col)]
-        self.mines = 100
-        self.flags = 100
+        self.row, self.col = (8, 8)
+        self.board = [[Square() for i in range(self.row)] for j in range(self.col)]
+        self.mines = 16
+        self.flags = 16
 
     def place_mines(self, x, y):
         for k in range(self.mines):
@@ -29,30 +29,30 @@ class MineSweeper:
                     if i > 0:
                         if self.board[i - 1][j].value >= 0:
                             self.board[i - 1][j].increment()
-                    if i < 21:
+                    if i < self.row - 1:
                         if self.board[i + 1][j].value >= 0:
                             self.board[i + 1][j].increment()
                     if j > 0:
                         if self.board[i][j - 1].value >= 0:
                             self.board[i][j - 1].increment()
-                    if j < 21:
+                    if j < self.col - 1:
                         if self.board[i][j + 1].value >= 0:
                             self.board[i][j + 1].increment()
                     if i > 0 and j > 0:
                         if self.board[i - 1][j - 1].value >= 0:
                             self.board[i - 1][j - 1].increment()
-                    if i < 21 and j < 21:
+                    if i < self.row - 1 and j < self.col - 1:
                         if self.board[i + 1][j + 1].value >= 0:
                             self.board[i + 1][j + 1].increment()
-                    if i < 21 and j > 0:
+                    if i < self.row - 1 and j > 0:
                         if self.board[i + 1][j - 1].value >= 0:
                             self.board[i + 1][j - 1].increment()
-                    if i > 0 and j < 21:
+                    if i > 0 and j < self.col - 1:
                         if self.board[i - 1][j + 1].value >= 0:
                             self.board[i - 1][j + 1].increment()
 
     def is_valid_move(self, x, y):
-        if x >= 0 and x < 22 and y >= 0 and y < 22 and self.board[x][y].revealed is False and self.board[x][y].flagged is False:
+        if x >= 0 and x < 22 and y >= 0 and y < 22 and self.board[x][y].revealed is False:
             return True
         else:
             return False
@@ -64,7 +64,7 @@ class MineSweeper:
                 self.board[x - 1][y].reveal()
                 if self.board[x - 1][y].value == 0:
                     self.clear_blanks(x - 1, y)
-        if x < 21:
+        if x < self.row - 1:
             if not self.board[x + 1][y].revealed:
                 self.board[x + 1][y].reveal()
                 if self.board[x + 1][y].value == 0:
@@ -74,7 +74,7 @@ class MineSweeper:
                 self.board[x][y - 1].reveal()
                 if self.board[x][y - 1].value == 0:
                     self.clear_blanks(x, y - 1)
-        if y < 21:
+        if y < self.col - 1:
             if not self.board[x][y + 1].revealed:
                 self.board[x][y + 1].reveal()
                 if self.board[x][y + 1].value == 0:
@@ -84,17 +84,17 @@ class MineSweeper:
                 self.board[x - 1][y - 1].reveal()
                 if self.board[x - 1][y - 1].value == 0:
                     self.clear_blanks(x - 1, y - 1)
-        if x < 21 and y < 21:
+        if x < self.row - 1 and y < self.col - 1:
             if not self.board[x + 1][y + 1].revealed:
                 self.board[x + 1][y + 1].reveal()
                 if self.board[x + 1][y + 1].value == 0:
                     self.clear_blanks(x + 1, y + 1)
-        if x < 21 and y > 0:
+        if x < self.row - 1 and y > 0:
             if not self.board[x + 1][y - 1].revealed:
                 self.board[x + 1][y - 1].reveal()
                 if self.board[x + 1][y - 1].value == 0:
                     self.clear_blanks(x + 1, y - 1)
-        if x > 0 and y < 21:
+        if x > 0 and y < self.col - 1:
             if not self.board[x - 1][y + 1].revealed:
                 self.board[x - 1][y + 1].reveal()
                 if self.board[x - 1][y + 1].value == 0:
@@ -103,15 +103,22 @@ class MineSweeper:
 
 
     def make_move(self):
+        ans = int(input("Do you want to (0) place a flag or (1) reveal a square: "))
         cord = self.get_input()
-        self.board[cord[0]][cord[1]].reveal()
-        if self.board[cord[0]][cord[1]].value == 0:
-            self.clear_blanks(cord[0], cord[1])
-        if self.board[cord[0]][cord[1]].value == -1:
-            return "L"
-        if self.num_open() == 0:
-            return "W"
-        return "L"
+        if ans == 0:
+            self.board[cord[0]][cord[1]].switch_flag()
+        else:
+            if self.board[cord[0]][cord[1]].flagged:
+                print("Not a valid input try again")
+                cord = self.get_input()
+            self.board[cord[0]][cord[1]].reveal()
+            if self.board[cord[0]][cord[1]].value == 0:
+                self.clear_blanks(cord[0], cord[1])
+            if self.board[cord[0]][cord[1]].value == -1:
+                return "L"
+            if self.num_open() == 0:
+                return "W"
+        return "N"
 
 
     def make_first_move(self):
@@ -120,8 +127,6 @@ class MineSweeper:
         self.place_mines(cord[0], cord[1])
         self.assign_nums()
         self.clear_blanks(cord[0], cord[1])
-
-
 
 
     def get_input(self):
@@ -140,12 +145,20 @@ class MineSweeper:
         self.draw_board()
         self.make_first_move()
         self.draw_board()
+        condition = "N"
+        while condition == "N":
+            condition = self.make_move()
+            self.draw_board()
+        if condition == "W":
+            print("YOU WIN! :)")
+        else:
+            print("BOOOM: you blew up")
 
     def num_open(self):
         num = 0
         for i in range(len(self.board)):
             for j in range(len(self.board[0])):
-                if self.board[i][j].value == 0 and self.board[i][j].revealed is False:
+                if self.board[i][j].value >= 0 and self.board[i][j].revealed is False:
                     num += 1
         return num
 
