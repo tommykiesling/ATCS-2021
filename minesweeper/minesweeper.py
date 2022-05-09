@@ -147,7 +147,13 @@ class MineSweeper:
         self.draw_board()
         condition = "N"
         while condition == "N":
-            condition = self.make_move()
+            type = int(input("Do you want to make a move(0) or should the computer make a move(1): "))
+            if type == 0:
+                condition = self.make_move()
+            else:
+                self.make_AI_move()
+                if self.num_open() == 0:
+                    condition = "W"
             self.draw_board()
         if condition == "W":
             print("YOU WIN! :)")
@@ -161,6 +167,143 @@ class MineSweeper:
                 if self.board[i][j].value >= 0 and self.board[i][j].revealed is False:
                     num += 1
         return num
+
+    def num_unrevealed(self, x, y):
+        num = 0
+        if x > 0:
+            if not self.board[x - 1][y].revealed:
+                num += 1
+        if x < self.row - 1:
+            if not self.board[x + 1][y].revealed:
+                num += 1
+        if y > 0:
+            if not self.board[x][y - 1].revealed:
+                num += 1
+        if y < self.col - 1:
+            if not self.board[x][y + 1].revealed:
+                num += 1
+        if x > 0 and y > 0:
+            if not self.board[x - 1][y - 1].revealed:
+                num += 1
+        if x < self.row - 1 and y < self.col - 1:
+            if not self.board[x + 1][y + 1].revealed:
+                num += 1
+        if x < self.row - 1 and y > 0:
+            if not self.board[x + 1][y - 1].revealed:
+                num += 1
+        if x > 0 and y < self.col - 1:
+            if not self.board[x - 1][y + 1].revealed:
+                num += 1
+        return num
+
+    def num_flagged(self, x, y):
+        num = 0
+        if x > 0:
+            if self.board[x - 1][y].flagged:
+                num += 1
+        if x < self.row - 1:
+            if self.board[x + 1][y].flagged:
+                num += 1
+        if y > 0:
+            if self.board[x][y - 1].flagged:
+                num += 1
+        if y < self.col - 1:
+            if self.board[x][y + 1].flagged:
+                num += 1
+        if x > 0 and y > 0:
+            if self.board[x - 1][y - 1].flagged:
+                num += 1
+        if x < self.row - 1 and y < self.col - 1:
+            if self.board[x + 1][y + 1].flagged:
+                num += 1
+        if x < self.row - 1 and y > 0:
+            if self.board[x + 1][y - 1].flagged:
+                num += 1
+        if x > 0 and y < self.col - 1:
+            if self.board[x - 1][y + 1].flagged:
+                num += 1
+        return num
+    def reveal_rest(self, x, y):
+        if x > 0:
+            if not self.board[x - 1][y].revealed and not self.board[x - 1][y].flagged:
+                self.board[x - 1][y].reveal()
+                if self.board[x - 1][y].value == 0:
+                    self.clear_blanks(x - 1, y)
+        if x < self.row - 1:
+            if not self.board[x+ 1][y].revealed and not self.board[x + 1][y].flagged:
+                self.board[x + 1][y].reveal()
+                if self.board[x + 1][y].value == 0:
+                    self.clear_blanks(x + 1, y)
+        if y > 0:
+            if not self.board[x][y - 1].revealed and not self.board[x][y - 1].flagged:
+                self.board[x][y - 1].reveal()
+                if self.board[x][y - 1].value == 0:
+                    self.clear_blanks(x, y - 1)
+        if y < self.col - 1:
+            if not self.board[x][y + 1].revealed and not self.board[x][y + 1].flagged:
+                self.board[x][y + 1].reveal()
+                if self.board[x][y + 1].value == 0:
+                    self.clear_blanks(x, y + 1)
+        if x > 0 and y > 0:
+            if not self.board[x - 1][y - 1].revealed and not self.board[x - 1][y - 1].flagged:
+                self.board[x - 1][y - 1].reveal()
+                if self.board[x - 1][y - 1].value == 0:
+                    self.clear_blanks(x - 1, y - 1)
+        if x < self.row - 1 and y < self.col - 1:
+            if not self.board[x + 1][y + 1].revealed and not self.board[x + 1][y + 1].flagged:
+                self.board[x + 1][y + 1].reveal()
+                if self.board[x + 1][y + 1].value == 0:
+                    self.clear_blanks(x + 1, y + 1)
+        if x < self.row - 1 and y > 0:
+            if not self.board[x + 1][y - 1].revealed and not self.board[x + 1][y - 1].flagged:
+                self.board[x + 1][y - 1].reveal()
+                if self.board[x + 1][y - 1].value == 0:
+                    self.clear_blanks(x + 1, y - 1)
+        if x > 0 and y < self.col - 1:
+            if not self.board[x - 1][y + 1].revealed and not self.board[x - 1][y + 1].flagged:
+                self.board[x - 1][y + 1].reveal()
+                if self.board[x - 1][y + 1].value == 0:
+                    self.clear_blanks(x - 1, y + 1)
+
+    def flag_rest(self, x, y):
+        if x > 0:
+            if not self.board[x - 1][y].revealed and not self.board[x - 1][y].flagged:
+                self.board[x - 1][y].switch_flag()
+        if x < self.row - 1:
+            if not self.board[x+ 1][y].revealed and not self.board[x + 1][y].flagged:
+                self.board[x + 1][y].switch_flag()
+        if y > 0:
+            if not self.board[x][y - 1].revealed and not self.board[x][y - 1].flagged:
+                self.board[x][y - 1].switch_flag()
+        if y < self.col - 1:
+            if not self.board[x][y + 1].revealed and not self.board[x][y + 1].flagged:
+                self.board[x][y + 1].switch_flag()
+        if x > 0 and y > 0:
+            if not self.board[x - 1][y - 1].revealed and not self.board[x - 1][y - 1].flagged:
+                self.board[x - 1][y - 1].switch_flag()
+        if x < self.row - 1 and y < self.col - 1:
+            if not self.board[x + 1][y + 1].revealed and not self.board[x + 1][y + 1].flagged:
+                self.board[x + 1][y + 1].switch_flag()
+        if x < self.row - 1 and y > 0:
+            if not self.board[x + 1][y - 1].revealed and not self.board[x + 1][y - 1].flagged:
+                self.board[x + 1][y - 1].switch_flag()
+        if x > 0 and y < self.col - 1:
+            if not self.board[x - 1][y + 1].revealed and not self.board[x - 1][y + 1].flagged:
+                self.board[x - 1][y + 1].switch_flag()
+
+    def make_AI_move(self):
+        for i in range(len(self.board)):
+            for j in range(len(self.board[0])):
+                if self.board[i][j].revealed:
+                    flags = self.num_flagged(i, j)
+                    open = self.num_unrevealed(i, j)
+                    if flags == self.board[i][j].value:
+                        self.reveal_rest(i, j)
+                        return
+                    if open == self.board[i][j].value - flags:
+                        self.flag_rest(i, j)
+                        return
+
 
 
 
