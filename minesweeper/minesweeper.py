@@ -14,7 +14,7 @@ class MineSweeper:
             for i in range(len(self.board)):
                 for j in range(len(self.board[0])):
                     if self.board[i][j].value == 0:
-                        if i < x - 2 or j < y - 2 or i > x + 2 or j > x + 2:
+                        if i < x - 2 or j < y - 2 or i > x + 2 or j > y + 2:
                             if index == 0:
                                 self.board[i][j].set_value(-1)
                                 index -= 1
@@ -223,6 +223,7 @@ class MineSweeper:
             if self.board[x - 1][y + 1].flagged:
                 num += 1
         return num
+
     def reveal_rest(self, x, y):
         if x > 0:
             if not self.board[x - 1][y].revealed and not self.board[x - 1][y].flagged:
@@ -230,7 +231,7 @@ class MineSweeper:
                 if self.board[x - 1][y].value == 0:
                     self.clear_blanks(x - 1, y)
         if x < self.row - 1:
-            if not self.board[x+ 1][y].revealed and not self.board[x + 1][y].flagged:
+            if not self.board[x + 1][y].revealed and not self.board[x + 1][y].flagged:
                 self.board[x + 1][y].reveal()
                 if self.board[x + 1][y].value == 0:
                     self.clear_blanks(x + 1, y)
@@ -270,7 +271,7 @@ class MineSweeper:
             if not self.board[x - 1][y].revealed and not self.board[x - 1][y].flagged:
                 self.board[x - 1][y].switch_flag()
         if x < self.row - 1:
-            if not self.board[x+ 1][y].revealed and not self.board[x + 1][y].flagged:
+            if not self.board[x + 1][y].revealed and not self.board[x + 1][y].flagged:
                 self.board[x + 1][y].switch_flag()
         if y > 0:
             if not self.board[x][y - 1].revealed and not self.board[x][y - 1].flagged:
@@ -297,12 +298,13 @@ class MineSweeper:
                 if self.board[i][j].revealed:
                     flags = self.num_flagged(i, j)
                     open = self.num_unrevealed(i, j)
-                    if flags == self.board[i][j].value:
-                        self.reveal_rest(i, j)
-                        return
-                    if open == self.board[i][j].value - flags:
-                        self.flag_rest(i, j)
-                        return
+                    if open != 0 and flags != open:
+                        if flags == self.board[i][j].value:
+                            self.reveal_rest(i, j)
+                            return
+                        if open == self.board[i][j].value - flags:
+                            self.flag_rest(i, j)
+                            return
 
 
 
